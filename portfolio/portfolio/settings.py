@@ -15,27 +15,17 @@ from pathlib import Path
 from decouple import config
 import dj_database_url
 
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-secret")
-DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
+# Secret key
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", config("SECRET_KEY", default="dev-secret-not-for-prod"))
 
-ALLOWED_HOSTS = ["*"]  # you can replace with your Heroku app domain later
+# Debug mode
+DEBUG = os.getenv("DJANGO_DEBUG", str(config("DEBUG", default=False))).lower() in ["1", "true", "yes"]
+
+# Allowed hosts
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ot#1-_@r8@p88b1()^@u5!55hg-5q4snhloc=fafoqh92&ff^r'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
