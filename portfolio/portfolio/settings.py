@@ -15,9 +15,9 @@ from pathlib import Path
 from decouple import config
 import dj_database_url
 
-
-SECRET_KEY = config("SECRET_KEY", default="dev-secret-not-for-prod")
-DEBUG = config("DEBUG", default=False, cast=bool)
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "fallback-secret")
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = ["*"]  # you can replace with your Heroku app domain later
 
