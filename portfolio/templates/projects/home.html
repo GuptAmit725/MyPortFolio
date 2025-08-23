@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Portfolio</title>
+
+  <!-- Swiper (CDN) -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <!-- Your styles -->
+  <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+    <section class="profile container">
+        <div class="profile-pic">
+            <img src="{% static 'img/profile.jpeg' %}" alt="Amit Kumar Gupta">
+        </div>
+        <div class="profile-info">
+            <h2 class="profile-name">Amit Kumar Gupta</h2>
+            <p class="profile-role">AI/ML Specialist | Tech lead : ACCENTURE SOLUTIONS PVT LTD</p>
+            <p class="profile-contact">📞 +91-9060211542
+            <p class="profile-contact">✉️ amitinger25@gmail.com</p>
+            <p class="profile-contact"> 🔗 <a class="profile-link" href="https://www.linkedin.com/in/amit-kumar-gupta-5005361a1/" target="_blank" rel="noopener">LinkedIn</a></p>
+            <p class="profile-contact">📄 <a class="profile-link" href="{% static 'docs/MyCV.pdf'%}" download>Download CV</a></p>
+        </div>
+        <div class="profile-summary">
+            <p>
+                Experienced AI and data science 
+                specialist with 5+ years in developing 
+                scalable solutions in retail, telecom, 
+                banking, insurance and R&D sectors. 
+                Have delivered projects following 
+                Agile methodology, ranging from 
+                recommendation systems, time-series 
+                forecasting, NLP text classification 
+                and Generative AI using Python, 
+                Pytorch, SQl, LangChain and Flask. 
+                Proactiveness and self-driven 
+                approach keep me updated in this 
+                highly volatile tech world. 
+            </p>
+        </div>
+    </section>
+    <!-- Hire Me Button -->
+    <div class="hire-me-container">
+    <button class="hire-me-btn" onclick="document.getElementById('hireModal').style.display='block'">
+        Hire Me
+    </button>
+    </div>
+
+  <header class="container">
+    <h1>AI/ML Specialist & Tech Leader<span class="accent"> Turning Data into Business Impact</span></h1>
+    <p>Here are a few projects I’ve been working on.</p>
+  </header>
+  <main class="container">
+    {% if projects %}
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          {% for p in projects %}
+            <!-- Each slide is a vertical card that links to the repo -->
+            <div class="swiper-slide">
+                <a class="card" href="{{ p.github_url }}" target="_blank" rel="noopener">
+                    {% if p.image_path %}
+                    {% if p.image_path|slice:":4" == "http" or p.image_path|slice:":1" == "/" %}
+                        <img src="{{ p.image_path }}" alt="{{ p.title }}">
+                    {% else %}
+                        <img src="{% static p.image_path %}" alt="{{ p.title }}">
+                    {% endif %}
+                    {% endif %}
+                    <div class="card-body">
+                    <h3>{{ p.title }}</h3>
+                    <p>{{ p.description }}</p>
+                    </div>
+                </a>
+                </div>
+
+          {% endfor %}
+        </div>
+
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-pagination"></div>
+      </div>
+    {% else %}
+      <p>No projects yet. Add some in <a href="/admin/">Admin</a>.</p>
+    {% endif %}
+  </main>
+
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper('.swiper', {
+    slidesPerView: 1,
+    centeredSlides: true,
+    spaceBetween: 28,
+    loop: true,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+  });
+</script>
+
+<!-- Modal -->
+<div id="hireModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('hireModal').style.display='none'">&times;</span>
+    <h2>Hire Me</h2>
+    <form method="POST" action="{% url 'hire_me' %}">
+      {% csrf_token %}
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</div>
+{% if messages %}
+<script>
+  (function () {
+    {% for message in messages %}
+      alert("{{ message|escapejs }}");
+    {% endfor %}
+  })();
+</script>
+{% endif %}
+
+</body>
+</html>
