@@ -21,7 +21,7 @@ DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
 
 # Comma-separated list, e.g. "example.com,ec2-1-2-3-4.compute-1.amazonaws.com,127.0.0.1,localhost"
 ALLOWED_HOSTS = [
-    "yec2-51-20-53-80.eu-north-1.compute.amazonaws.com",
+    "ec2-51-20-53-80.eu-north-1.compute.amazonaws.com",
     "127.0.0.1",
     "localhost",
 ]
