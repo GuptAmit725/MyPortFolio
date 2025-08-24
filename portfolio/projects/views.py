@@ -4,6 +4,13 @@ from django.contrib import messages
 from .models import Project
 from twilio.rest import Client
 
+import os
+from decouple import config
+
+TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID", default=os.getenv("TWILIO_ACCOUNT_SID"))
+TWILIO_AUTH_TOKEN  = config("TWILIO_AUTH_TOKEN",  default=os.getenv("TWILIO_AUTH_TOKEN"))
+
+
 def home(request):
     projects = Project.objects.all()
     return render(request, "projects/home.html", {"projects": projects})
@@ -20,13 +27,14 @@ def hire_me(request):
         body = f"Hire request from {email}\n\n{message}"
 
         # Twilio credentials (put in settings or env vars later)
-        account_sid = "AC7eb2031efb05262e155ad13f1b65a889"
-        auth_token = "4a14cd5c9fe4085a014b81e460ced711"
+        account_sid = TWILIO_ACCOUNT_SID
+        auth_token = TWILIO_AUTH_TOKEN
         client = Client(account_sid, auth_token)
 
         try:
             client.messages.create(
-                from_="whatsapp:+14155238886", # Twilio sandbox number
+                from_="whatsapp:+14155238886",
+                  # Twilio sandbox number
                 body=body,
                 to="whatsapp:+919060211542"  # your WhatsApp number (with country code)
             )
